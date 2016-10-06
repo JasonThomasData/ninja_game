@@ -139,7 +139,6 @@
       });
 
       QUnit.test( "Test that the player's order to jump changes the player object state", function(assert) {
-        //So now, the player object has some pixels to move
         game_settings.player.px_to_jump_y = 100;
         var player_entity = new Player();
         player_entity.px_to_jump_y = 0;
@@ -147,6 +146,18 @@
 
         var assertion = player_entity.px_to_jump_y;
         var value_test = 100;
+        assert.ok(assertion == value_test);
+      });
+
+      QUnit.test( "Test that the player's order to jump is ignored, because the player is falling", function(assert) {
+        game_settings.player.px_to_jump_y = 100;
+        var player_entity = new Player();
+        player_entity.px_to_jump_y = 0;
+        player_entity.falling = true;
+        player_entity.jump_order();
+
+        var assertion = player_entity.px_to_jump_y;
+        var value_test = 0;
         assert.ok(assertion == value_test);
       });
 
