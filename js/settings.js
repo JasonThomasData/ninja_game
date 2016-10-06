@@ -9,6 +9,12 @@ var game_settings = {
     px_per_move_x: 50,
     px_per_jump_y: 100
   },
+  objects: {
+    platforms: {
+      wide: 100,
+      high: 100
+    }
+  },
   animation: {
     frame: {
       width: 500,

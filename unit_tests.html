@@ -14,6 +14,7 @@
 
   <script src="js/settings.js"></script>
   <script src="js/entities.js"></script>
+  <script src="js/objects.js"></script>
 
   <script>
 
@@ -163,6 +164,37 @@
 
     }
     test_player_order()
+
+    function test_platform_init(){
+      /* js/objects.js */
+
+      QUnit.test( "Test that the platform is initialised", function(assert) {
+        game_settings.objects.platforms.wide = 100;
+        game_settings.objects.platforms.high = 100;
+        var starting_x_pos = 0
+        var starting_y_pos = 0
+        var platform = new Platform(starting_x_pos, starting_y_pos);
+
+        var assertion = platform.wide;
+        var value_test = 100;
+        assert.ok(assertion == value_test);
+      });
+
+      QUnit.test( "Test that the platform is initialised", function(assert) {
+        game_settings.objects.platforms.wide = 100;
+        game_settings.objects.platforms.high = 100;
+        var starting_x_pos = 5
+        var starting_y_pos = 0
+        var platform = new Platform(starting_x_pos, starting_y_pos);
+
+        var assertion = platform.x_pos;
+        var value_test = 500;
+        assert.ok(assertion == value_test);
+      });
+
+
+    }
+    test_platform_init()
 
   </script>
 </body>
