@@ -113,6 +113,33 @@
     }
     test_entities_move()
 
+    function test_player_order(){
+      /* entities.js */
+
+      QUnit.test( "Test that the player's order to move right changes the player object state", function(assert) {
+        //So now, the player object has some pixels to move
+        game_settings.player.px_per_move_x = 100
+        var player_entity = new Player();
+        player_entity.move_order('right')
+
+        var assertion = player_entity.px_to_move_x;
+        var value_test = 100;
+        assert.ok(assertion == value_test);
+      });
+
+      QUnit.test( "Test that the player's order to move left changes the player object state", function(assert) {
+        //So now, the player object has some pixels to move
+        var player_entity = new Player();
+        player_entity.direction_facing = 'right';
+        player_entity.move_order('left');
+
+        var assertion = player_entity.direction_facing;
+        var value_test = 'left';
+        assert.ok(assertion == value_test);
+      });
+
+    }
+    test_player_order()
 
   </script>
 </body>

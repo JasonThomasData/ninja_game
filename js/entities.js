@@ -8,6 +8,7 @@ var Person = function(px_per_move, starting_x_pos){
   this.update = function(){
     // This is the function to call from the loop. The entity will do what is told from here.
     // px_to_move_x will tell us if there's an order to move right or not.
+    // NOTE - Jase does this contain stuff specific to the player, and should we have a seperate one for each instance?
     if (this.px_to_move_x > 0) {
       this.move_x();
       this.px_to_move_x -= 1;
@@ -28,6 +29,14 @@ var Player = function(){
   var px_per_move = game_settings.player.px_per_move_x;
   var starting_x_pos = game_settings.player.starting_x_pos
   Person.call(this, px_per_move, starting_x_pos);
+  this.move_order = function(direction){
+    this.px_to_move_x = this.px_per_move_x;
+    if (direction == 'right'){
+      this.direction_facing = 'right';
+    } else {
+      this.direction_facing = 'left';
+    }
+  }
 }
 
 //This will not be part of the MVP
