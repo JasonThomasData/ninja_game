@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>QUnit - tests</title>
+  <link rel="stylesheet" href="vendor/QUnit/qunit-2.0.1.css">
+  <script src="vendor/QUnit/qunit-2.0.1.js"></script>
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+  <canvas id="canvas"></canvas>
+  <script src="js/settings.js"></script>
+
+  <script>
+
+    function test_(){
+      /* FILE NAME WE'RE TESTING */
+
+      QUnit.test( "message for this test", function( assert ) {
+        var assertion = null;
+        var value_test = null;
+        assert.ok( assertion == value_test );
+      });
+
+    }
+
+    // Give this a different name
+    test_()
+
+  </script>
+</body>
+</html>
