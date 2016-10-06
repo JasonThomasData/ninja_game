@@ -22,7 +22,6 @@
 
       QUnit.test( "Test that the player object is initialised", function(assert) {
         game_settings.player.px_per_move_x = 100
-        game_settings.player.px_per_render = 10
         var player_entity = new Player();
 
         var assertion = player_entity.px_per_move_x;
@@ -32,11 +31,11 @@
 
       QUnit.test( "Test that the enemy object is initialised", function(assert) {
         game_settings.enemies.px_per_move_x = 50
-        game_settings.enemies.px_per_render = 5
-        var enemy_entity = new Enemy();
+        var starting_x_pos = 70
+        var enemy_entity = new Enemy(starting_x_pos);
 
-        var assertion = enemy_entity.px_per_render;
-        var value_test = 5;
+        var assertion = enemy_entity.px_per_move_x;
+        var value_test = 50;
         assert.ok(assertion == value_test);
       });
 
