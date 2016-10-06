@@ -21,17 +21,17 @@
       /* entities.js */
 
       QUnit.test( "Test that the player object is initialised", function(assert) {
-        game_settings.player.px_per_move = 100
+        game_settings.player.px_per_move_x = 100
         game_settings.player.px_per_render = 10
         var player_entity = new Player();
 
-        var assertion = player_entity.px_per_move;
+        var assertion = player_entity.px_per_move_x;
         var value_test = 100;
         assert.ok(assertion == value_test);
       });
 
       QUnit.test( "Test that the enemy object is initialised", function(assert) {
-        game_settings.enemies.px_per_move = 50
+        game_settings.enemies.px_per_move_x = 50
         game_settings.enemies.px_per_render = 5
         var enemy_entity = new Enemy();
 
@@ -46,14 +46,29 @@
     function test_entities_move(){
       /* entities.js */
 
-      QUnit.test( "Test that the player object moves", function(assert) {
+      QUnit.test( "Test that the player object does not move on update", function(assert) {
         game_settings.player.starting_x_pos = 0;
         var player_entity = new Player();
+        player_entity.direction_facing = 'right'
+        player_entity.px_to_move_x = 0
+        player_entity.update();
+
+        //Despite the update, because there was no px_to_move, then unit's x_pos is unchanged.
+        var assertion = player_entity.x_pos;
+        var value_test = 0;
+        assert.ok(assertion == value_test);
+      });
+
+      QUnit.test( "Test that the player object moves on update", function(assert) {
+        game_settings.player.starting_x_pos = 0;
+        var player_entity = new Player();
+        player_entity.direction_facing = 'right'
+        player_entity.px_to_move_x = 1
         player_entity.update();
 
         //Despite the update, because there was no order to move, then unit's x_pos is unchanged.
         var assertion = player_entity.x_pos;
-        var value_test = 0;
+        var value_test = 1;
         assert.ok(assertion == value_test);
       });
 

@@ -1,12 +1,12 @@
 var game_settings = {
   player: {
     starting_hp: 100,
-    px_per_move: 100,
+    px_per_move_x: 100,
     px_per_render: 1
   },
   enemies: {
     starting_hp: 50,
-    px_per_move: 50,
+    px_per_move_x: 50,
     px_per_render: 1
   },
   animation: {
