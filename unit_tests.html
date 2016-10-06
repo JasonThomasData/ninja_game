@@ -30,13 +30,24 @@
         assert.ok(assertion == value_test);
       });
 
-      QUnit.test( "Test that the enemy object is initialised", function(assert) {
-        game_settings.enemies.px_per_move_x = 50
-        var starting_x_pos = 70
-        var enemy_entity = new Enemy(starting_x_pos);
+      QUnit.test( "Test that the player object is initialised at correct location", function(assert) {
+        game_settings.player.starting_x_pos = 5
+        game_settings.positions.wide = 100
+        var player_entity = new Player();
 
-        var assertion = enemy_entity.px_per_move_x;
-        var value_test = 50;
+        var assertion = player_entity.x_pos;
+        var value_test = 500;
+        assert.ok(assertion == value_test);
+      });
+
+      QUnit.test( "Test that the enemy object is initialised at correct location", function(assert) {
+        game_settings.positions.wide = 100;
+        var starting_x_pos = 7
+        var starting_y_pos = 0
+        var enemy_entity = new Enemy(starting_x_pos, starting_y_pos);
+
+        var assertion = enemy_entity.x_pos;
+        var value_test = 700;
         assert.ok(assertion == value_test);
       });
 
@@ -86,7 +97,8 @@
       });
 
       QUnit.test( "Test that the enemy object moves right on update", function(assert) {
-        var starting_x_pos = 100
+        game_settings.positions.wide = 100
+        var starting_x_pos = 1
         var enemy_entity = new Enemy(starting_x_pos);
         enemy_entity.direction_facing = 'right'
         enemy_entity.px_to_move_x = 1
@@ -99,7 +111,8 @@
       });
 
       QUnit.test( "Test that the enemy object moves left on update", function(assert) {
-        var starting_x_pos = 100
+        game_settings.positions.wide = 100
+        var starting_x_pos = 1
         var enemy_entity = new Enemy(starting_x_pos);
         enemy_entity.direction_facing = 'left'
         enemy_entity.px_to_move_x = 1
