@@ -12,6 +12,7 @@
   <div id="qunit-fixture"></div>
   <canvas id="canvas"></canvas>
 
+  <script src="js/settings.js"></script>
   <script src="js/entities.js"></script>
 
   <script>
@@ -20,9 +21,9 @@
       /* entities.js */
 
       QUnit.test( "Test that the player object is initialised", function(assert) {
-        var px_per_move = 100
-        var px_per_render = 10
-        var player_entity = new Player(px_per_move, px_per_render);
+        game_settings.player.px_per_move = 100
+        game_settings.player.px_per_render = 10
+        var player_entity = new Player();
 
         var assertion = player_entity.px_per_move;
         var value_test = 100;
@@ -30,9 +31,9 @@
       });
 
       QUnit.test( "Test that the enemy object is initialised", function(assert) {
-        var px_per_move = 50
-        var px_per_render = 5
-        var enemy_entity = new Enemy(px_per_move, px_per_render);
+        game_settings.enemies.px_per_move = 50
+        game_settings.enemies.px_per_render = 5
+        var enemy_entity = new Enemy();
 
         var assertion = enemy_entity.px_per_render;
         var value_test = 5;

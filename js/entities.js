@@ -9,11 +9,15 @@ var Person = function(px_per_move, px_per_render){
 
 //This is our basic player object
 var Player = function(px_per_move, px_per_render){
+  var px_per_move = game_settings.player.px_per_move;
+  var px_per_render = game_settings.player.px_per_render;
   Person.call(this, px_per_move, px_per_render);
 }
 
 //This will not be part of the MVP
 var Enemy = function(px_per_move, px_per_render){
+  var px_per_move = game_settings.enemies.px_per_move;
+  var px_per_render = game_settings.enemies.px_per_render;
   Person.call(this, px_per_move, px_per_render)
 
   this.get_enemy_direction = function(){
