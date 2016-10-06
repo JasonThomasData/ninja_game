@@ -58,7 +58,7 @@
         assert.ok(assertion == value_test);
       });
 
-      QUnit.test( "Test that the player object moves on update", function(assert) {
+      QUnit.test( "Test that the player object moves right on update", function(assert) {
         game_settings.player.starting_x_pos = 0;
         var player_entity = new Player();
         player_entity.direction_facing = 'right'
@@ -68,6 +68,45 @@
         //Despite the update, because there was no order to move, then unit's x_pos is unchanged.
         var assertion = player_entity.x_pos;
         var value_test = 1;
+        assert.ok(assertion == value_test);
+      });
+
+      QUnit.test( "Test that the player object moves left on update", function(assert) {
+        game_settings.player.starting_x_pos = 0;
+        var player_entity = new Player();
+        player_entity.direction_facing = 'left'
+        player_entity.px_to_move_x = 1
+        player_entity.update();
+
+        //Despite the update, because there was no order to move, then unit's x_pos is unchanged.
+        var assertion = player_entity.x_pos;
+        var value_test = -1;
+        assert.ok(assertion == value_test);
+      });
+
+      QUnit.test( "Test that the enemy object moves right on update", function(assert) {
+        var starting_x_pos = 100
+        var enemy_entity = new Enemy(starting_x_pos);
+        enemy_entity.direction_facing = 'right'
+        enemy_entity.px_to_move_x = 1
+        enemy_entity.update();
+
+        //Despite the update, because there was no order to move, then unit's x_pos is unchanged.
+        var assertion = enemy_entity.x_pos;
+        var value_test = 101;
+        assert.ok(assertion == value_test);
+      });
+
+      QUnit.test( "Test that the enemy object moves left on update", function(assert) {
+        var starting_x_pos = 100
+        var enemy_entity = new Enemy(starting_x_pos);
+        enemy_entity.direction_facing = 'left'
+        enemy_entity.px_to_move_x = 1
+        enemy_entity.update();
+
+        //Despite the update, because there was no order to move, then unit's x_pos is unchanged.
+        var assertion = enemy_entity.x_pos;
+        var value_test = 99;
         assert.ok(assertion == value_test);
       });
 
