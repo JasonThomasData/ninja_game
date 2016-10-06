@@ -12,7 +12,7 @@ var Person = function(px_per_move_x, px_per_jump_y, starting_x_pos){
     // This is the function to call from the loop. The entity will do what is told from here.
     // px_to_move_x will tell us if there's an order to move right or not.
     // NOTE - Jase does this contain stuff specific to the player, and should we have a seperate one for each instance?
-    if (this.px_to_move_x > 0) {
+    if (this.px_to_move_x >= 1) {
       this.move_x();
       this.px_to_move_x -= 1;
     }
@@ -20,7 +20,13 @@ var Person = function(px_per_move_x, px_per_jump_y, starting_x_pos){
     //Add a condition to check if there's a platform underneath, if there is, set falling to false, if not, set to true
     //When an object has jumped, then it is techically falling still, but if it has upward momentum, it will go up.
 
-    this.move_y()
+    if (this.px_to_jump_y >= 1) {
+      this.move_y()
+      this.px_to_jump_y - 1
+    } else if (this.falling) {
+      this.move_y()
+    }
+
   }
   this.move_x = function(){
     //Updates the x_pos, gravity handled in another function
@@ -33,10 +39,10 @@ var Person = function(px_per_move_x, px_per_jump_y, starting_x_pos){
   this.move_y = function(){
     //Updates y_pos, gravity or jumping
     //For now, we use cartesian coordinates, so starting from bottom left
-    if (this.px_to_jump_y > 0){
-      this.y_pos += 1;
-    } else if (this.falling = true){
+    if (this.falling = true){
       this.y_pos -= 1;
+    } else {
+      this.y_pos += 1;
     }
   }
 }
