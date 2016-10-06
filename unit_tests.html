@@ -17,7 +17,7 @@
 
   <script>
 
-    function test_entities(){
+    function test_entities_init(){
       /* entities.js */
 
       QUnit.test( "Test that the player object is initialised", function(assert) {
@@ -41,9 +41,25 @@
       });
 
     }
+    test_entities_init()
 
-    // Give this a different name
-    test_entities()
+    function test_entities_move(){
+      /* entities.js */
+
+      QUnit.test( "Test that the player object moves", function(assert) {
+        game_settings.player.starting_x_pos = 0;
+        var player_entity = new Player();
+        player_entity.update();
+
+        //Despite the update, because there was no order to move, then unit's x_pos is unchanged.
+        var assertion = player_entity.x_pos;
+        var value_test = 0;
+        assert.ok(assertion == value_test);
+      });
+
+    }
+    test_entities_move()
+
 
   </script>
 </body>
