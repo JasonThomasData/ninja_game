@@ -10,6 +10,8 @@ var game_settings = {
   },
   player: {
     starting_hp: 100,
+    wide: 100,
+    high: 100,
     starting_x_pos: 0,
     starting_y_pos: 0,
     px_per_move_x: 100,

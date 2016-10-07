@@ -64,6 +64,7 @@ var Person = function(px_per_move_x, px_per_jump_y, starting_x_pos, starting_y_p
     var entity_left_side = this.x_pos;
     var entity_right_side = this.x_pos + this.wide;
     var entity_under_side = this.y_pos
+    var entity_centre = (entity_left_side + entity_right_side) / 2
 
     for(var i = 0; i < all_platforms.length; i++){
 
@@ -72,9 +73,11 @@ var Person = function(px_per_move_x, px_per_jump_y, starting_x_pos, starting_y_p
       var platform_top_side = all_platforms[i].y_pos + all_platforms[i].high;
 
       if (entity_under_side == platform_top_side) {
-        if (entity_left_side >= platform_left_side && entity_left_side <= platform_right_side) {
+        if (entity_centre > platform_left_side && entity_centre < platform_right_side) {
           return true;
-        } else if (entity_right_side >= platform_left_side && entity_right_side <= platform_right_side) {
+        } else if (entity_left_side > platform_left_side && entity_left_side < platform_right_side) {
+          return true;
+        } else if (entity_right_side > platform_left_side && entity_right_side < platform_right_side) {
           return true;
         }
       }
@@ -105,7 +108,7 @@ var Player = function(){
   }
   this.jump_order = function(direction){
     //Only only the order if the player is not falling
-    if (this.falling == false && this.platform_underneath){
+    if (this.platform_underneath){
       this.px_to_jump_y = this.px_per_jump_y;
     }
   }

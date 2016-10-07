@@ -335,7 +335,7 @@
         assert.ok(assertion == value_test);
       });
 
-      QUnit.test( "Test that player's falling property is false when platform is not underneath and the player has jumped", function(assert) {
+      QUnit.test( "Test that player's platform_underneath property is true when platform underneath", function(assert) {
         game_settings.objects.platforms.wide = 100;
         game_settings.objects.platforms.high = 100;
         game_settings.positions.wide = 100;
@@ -350,6 +350,51 @@
         game_settings.player.starting_y_pos = 2;
         var player_entity = new Player();
 
+        player_entity.update(all_platforms)
+
+        var assertion = player_entity.platform_underneath;
+        var value_test = true;
+        assert.ok(assertion == value_test);
+      });
+
+      QUnit.test( "Test that player's platform_underneath property is false when there's no platform underneath", function(assert) {
+        game_settings.objects.platforms.wide = 100;
+        game_settings.objects.platforms.high = 100;
+        game_settings.positions.wide = 100;
+        game_settings.positions.high = 100;
+
+        var platform_starting_x_pos = 1;
+        var platform_starting_y_pos = 1;
+        var platform = new Platform(platform_starting_x_pos, platform_starting_y_pos);
+        var all_platforms = [platform]
+
+        game_settings.player.starting_x_pos = 2;
+        game_settings.player.starting_y_pos = 2;
+        var player_entity = new Player();
+
+        player_entity.update(all_platforms)
+
+        var assertion = player_entity.platform_underneath;
+        var value_test = false;
+        assert.ok(assertion == value_test);
+      });
+
+
+      QUnit.test( "Test that player's falling property is false when platform is not underneath and the player has jumped", function(assert) {
+        game_settings.objects.platforms.wide = 100;
+        game_settings.objects.platforms.high = 100;
+        game_settings.positions.wide = 100;
+        game_settings.positions.high = 100;
+
+        var platform_starting_x_pos = 1;
+        var platform_starting_y_pos = 1;
+        var platform = new Platform(platform_starting_x_pos, platform_starting_y_pos);
+        var all_platforms = [platform]
+
+        game_settings.player.starting_x_pos = 2;
+        game_settings.player.starting_y_pos = 2;
+        var player_entity = new Player();
+
         player_entity.px_to_jump_y = player_entity.px_per_jump_y;
         player_entity.update(all_platforms);
 
@@ -357,6 +402,30 @@
         var value_test = false;
         assert.ok(assertion == value_test);
       });
+
+      QUnit.test( "Test that player's falling property is true when platform is not underneath and the player has not jumped", function(assert) {
+        game_settings.objects.platforms.wide = 100;
+        game_settings.objects.platforms.high = 100;
+        game_settings.positions.wide = 100;
+        game_settings.positions.high = 100;
+
+        var platform_starting_x_pos = 1;
+        var platform_starting_y_pos = 1;
+        var platform = new Platform(platform_starting_x_pos, platform_starting_y_pos);
+        var all_platforms = [platform]
+
+        game_settings.player.starting_x_pos = 2;
+        game_settings.player.starting_y_pos = 2;
+        var player_entity = new Player();
+
+        player_entity.px_to_jump_y = 0;
+        player_entity.update(all_platforms);
+
+        var assertion = player_entity.falling;
+        var value_test = true;
+        assert.ok(assertion == value_test);
+      });
+
 
     }
 
