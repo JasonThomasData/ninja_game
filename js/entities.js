@@ -18,6 +18,7 @@ var Person = function(px_per_move_x, px_per_jump_y, starting_x_pos, starting_y_p
   this.x_pos = starting_x_pos * game_settings.positions.wide;
   this.y_pos = starting_y_pos * game_settings.positions.high;
   this.update = function(all_platforms){
+
     // This is the function to call from the loop. The entity will do what is told from here.
     this.platform_underneath = this.check_platform_underneath(all_platforms);
 
@@ -33,11 +34,12 @@ var Person = function(px_per_move_x, px_per_jump_y, starting_x_pos, starting_y_p
   }
   this.move_x = function(){
     //Updates the x_pos, gravity handled in another function
+    //The 2 in increments, previously 1, should be an option in game_settings
     if (this.px_to_move_x >= 1) {
       if (this.direction_facing == 'right') {
-        this.x_pos += 1;
+        this.x_pos += 2;
       } else {
-        this.x_pos -= 1;
+        this.x_pos -= 2;
       }
       if (this.platform_underneath) {
         this.px_to_move_x -= 1;
@@ -47,11 +49,12 @@ var Person = function(px_per_move_x, px_per_jump_y, starting_x_pos, starting_y_p
   this.move_y = function(){
     //Updates y_pos, gravity or jumping
     //For now, we use cartesian coordinates, so starting from bottom left
+    //The 2 in increments, previously 1, should be an option in game_settings
     if (this.px_to_jump_y >= 1) {
-      this.y_pos += 1;
-      this.px_to_jump_y - 1;
+      this.y_pos += 2;
+      this.px_to_jump_y -= 1;
     } else if (this.falling) {
-      this.y_pos -= 1;
+      this.y_pos -= 2;
     }
   }
   this.check_platform_underneath = function(all_platforms) {
