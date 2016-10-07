@@ -8,6 +8,7 @@ var Person = function(px_per_move_x, px_per_jump_y, starting_x_pos, starting_y_p
 
   this.direction_facing = 'right'; //Can also be left
   this.falling = false; // true if there's no platform underneath, provided the player hasn't jumped.
+  this.platform_underneath = false;
   this.px_per_move_x = px_per_move_x; // Minimum move distance in px. Each key press, set this back to its default
   this.px_to_move_x = 0;  //When there's a right or left event, and the entity is on the ground, this will be updated
   this.px_per_jump_y = px_per_jump_y;
@@ -17,7 +18,7 @@ var Person = function(px_per_move_x, px_per_jump_y, starting_x_pos, starting_y_p
   this.x_pos = starting_x_pos * game_settings.positions.wide;
   this.y_pos = starting_y_pos * game_settings.positions.high;
 
-  this.update = function(){
+  this.update = function(all_platforms){
     // This is the function to call from the loop. The entity will do what is told from here.
     // px_to_move_x will tell us if there's an order to move right or not.
     // NOTE - Jase does this contain stuff specific to the player, and should we have a seperate one for each instance?
@@ -26,8 +27,13 @@ var Person = function(px_per_move_x, px_per_jump_y, starting_x_pos, starting_y_p
       this.px_to_move_x -= 1;
     }
 
-    //Add a condition to check if there's a platform underneath, if there is, set falling to false, if not, set to true
-    //When an object has jumped, then it is techically falling still, but if it has upward momentum, it will go up.
+    this.platform_underneath = this.check_platform_underneath(all_platforms);
+
+    if (this.platform_underneath || this.px_to_jump_y > 0) {
+      this.falling = false;
+    } else if (this.platform_underneath == false && this.px_to_jump_y <= 0) {
+      this.falling = true;
+    }
 
     if (this.px_to_jump_y >= 1) {
       this.move_y();
@@ -48,7 +54,7 @@ var Person = function(px_per_move_x, px_per_jump_y, starting_x_pos, starting_y_p
   this.move_y = function(){
     //Updates y_pos, gravity or jumping
     //For now, we use cartesian coordinates, so starting from bottom left
-    if (this.falling = true){
+    if (this.falling == true){
       this.y_pos -= 1;
     } else {
       this.y_pos += 1;
@@ -96,8 +102,9 @@ var Player = function(){
     }
   }
   this.jump_order = function(direction){
-    if (this.falling == false){
-      this.px_to_jump_y = this.px_per_jump_y;      
+    //Only only the order if the player is not falling
+    if (this.falling == false && this.platform_underneath){
+      this.px_to_jump_y = this.px_per_jump_y;
     }
   }
 }

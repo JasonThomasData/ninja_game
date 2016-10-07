@@ -60,9 +60,10 @@
       QUnit.test( "Test that the player object does not move on update", function(assert) {
         game_settings.player.starting_x_pos = 0;
         var player_entity = new Player();
+        var all_platforms = [];
         player_entity.direction_facing = 'right'
         player_entity.px_to_move_x = 0
-        player_entity.update();
+        player_entity.update(all_platforms);
 
         //Despite the update, because there was no px_to_move, then unit's x_pos is unchanged.
         var assertion = player_entity.x_pos;
@@ -73,9 +74,10 @@
       QUnit.test( "Test that the player object moves right on update", function(assert) {
         game_settings.player.starting_x_pos = 0;
         var player_entity = new Player();
+        var all_platforms = [];
         player_entity.direction_facing = 'right'
         player_entity.px_to_move_x = 1
-        player_entity.update();
+        player_entity.update(all_platforms);
 
         //Despite the update, because there was no order to move, then unit's x_pos is unchanged.
         var assertion = player_entity.x_pos;
@@ -86,9 +88,10 @@
       QUnit.test( "Test that the player object moves left on update", function(assert) {
         game_settings.player.starting_x_pos = 0;
         var player_entity = new Player();
+        var all_platforms = [];
         player_entity.direction_facing = 'left'
         player_entity.px_to_move_x = 1
-        player_entity.update();
+        player_entity.update(all_platforms);
 
         //Despite the update, because there was no order to move, then unit's x_pos is unchanged.
         var assertion = player_entity.x_pos;
@@ -100,9 +103,10 @@
         game_settings.positions.wide = 100
         var starting_x_pos = 1
         var enemy_entity = new Enemy(starting_x_pos);
+        var all_platforms = [];
         enemy_entity.direction_facing = 'right'
         enemy_entity.px_to_move_x = 1
-        enemy_entity.update();
+        enemy_entity.update(all_platforms);
 
         //Despite the update, because there was no order to move, then unit's x_pos is unchanged.
         var assertion = enemy_entity.x_pos;
@@ -112,11 +116,12 @@
 
       QUnit.test( "Test that the enemy object moves left on update", function(assert) {
         game_settings.positions.wide = 100
-        var starting_x_pos = 1
+        var starting_x_pos = 1;
         var enemy_entity = new Enemy(starting_x_pos);
-        enemy_entity.direction_facing = 'left'
-        enemy_entity.px_to_move_x = 1
-        enemy_entity.update();
+        var all_platforms = [];
+        enemy_entity.direction_facing = 'left';
+        enemy_entity.px_to_move_x = 1;
+        enemy_entity.update(all_platforms);
 
         //Despite the update, because there was no order to move, then unit's x_pos is unchanged.
         var assertion = enemy_entity.x_pos;
@@ -156,6 +161,7 @@
         game_settings.player.px_to_jump_y = 100;
         var player_entity = new Player();
         player_entity.px_to_jump_y = 0;
+        player_entity.platform_underneath = true;
         player_entity.jump_order();
 
         var assertion = player_entity.px_to_jump_y;
@@ -163,11 +169,12 @@
         assert.ok(assertion == value_test);
       });
 
-      QUnit.test( "Test that the player's order to jump is ignored, because the player is falling", function(assert) {
+      QUnit.test( "Test that the player's order to jump is ignored, because there' no platform underneath", function(assert) {
         game_settings.player.px_to_jump_y = 100;
         var player_entity = new Player();
         player_entity.px_to_jump_y = 0;
         player_entity.falling = true;
+        player_entity.platform_underneath = false;
         player_entity.jump_order();
 
         var assertion = player_entity.px_to_jump_y;
@@ -292,6 +299,51 @@
         var player_entity = new Player();
 
         var assertion = player_entity.check_platform_underneath(all_platforms);
+        var value_test = false;
+        assert.ok(assertion == value_test);
+      });
+
+      QUnit.test( "Test that player's falling property is false when platform underneath", function(assert) {
+        game_settings.objects.platforms.wide = 100;
+        game_settings.objects.platforms.high = 100;
+        game_settings.positions.wide = 100;
+        game_settings.positions.high = 100;
+
+        var platform_starting_x_pos = 1;
+        var platform_starting_y_pos = 1;
+        var platform = new Platform(platform_starting_x_pos, platform_starting_y_pos);
+        var all_platforms = [platform]
+
+        game_settings.player.starting_x_pos = 1;
+        game_settings.player.starting_y_pos = 2;
+        var player_entity = new Player();
+
+        player_entity.update(all_platforms)
+
+        var assertion = player_entity.falling;
+        var value_test = false;
+        assert.ok(assertion == value_test);
+      });
+
+      QUnit.test( "Test that player's falling property is false when platform is not underneath and the player has jumped", function(assert) {
+        game_settings.objects.platforms.wide = 100;
+        game_settings.objects.platforms.high = 100;
+        game_settings.positions.wide = 100;
+        game_settings.positions.high = 100;
+
+        var platform_starting_x_pos = 1;
+        var platform_starting_y_pos = 1;
+        var platform = new Platform(platform_starting_x_pos, platform_starting_y_pos);
+        var all_platforms = [platform]
+
+        game_settings.player.starting_x_pos = 1;
+        game_settings.player.starting_y_pos = 2;
+        var player_entity = new Player();
+
+        player_entity.px_to_jump_y = player_entity.px_per_jump_y;
+        player_entity.update(all_platforms);
+
+        var assertion = player_entity.falling;
         var value_test = false;
         assert.ok(assertion == value_test);
       });
