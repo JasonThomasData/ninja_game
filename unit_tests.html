@@ -205,9 +205,100 @@
         assert.ok(assertion == value_test);
       });
 
-
     }
     test_platform_init()
+
+    function test_platform_player_interact(){
+      /* js/objects.js, js/entities.js*/
+
+      QUnit.test( "Test that the platform is under player - one is", function(assert) {
+        game_settings.objects.platforms.wide = 100;
+        game_settings.objects.platforms.high = 100;
+        game_settings.positions.wide = 100;
+        game_settings.positions.high = 100;
+
+        var platform_1_starting_x_pos = 1;
+        var platform_1_starting_y_pos = 1;
+        var platform_1 = new Platform(platform_1_starting_x_pos, platform_1_starting_y_pos);
+
+        var platform_2_starting_x_pos = 2;
+        var platform_2_starting_y_pos = 1;
+        var platform_2 = new Platform(platform_2_starting_x_pos, platform_2_starting_y_pos);
+
+        var all_platforms = [platform_1, platform_2]
+
+        game_settings.player.starting_x_pos = 2;
+        game_settings.player.starting_y_pos = 2;
+        var player_entity = new Player();
+
+        var assertion = player_entity.check_platform_underneath(all_platforms);
+        var value_test = true;
+        assert.ok(assertion == value_test);
+      });
+
+      QUnit.test( "Test that the platform is not under player - platform to right", function(assert) {
+        game_settings.objects.platforms.wide = 100;
+        game_settings.objects.platforms.high = 100;
+        game_settings.positions.wide = 100;
+        game_settings.positions.high = 100;
+
+        var platform_starting_x_pos = 5;
+        var platform_starting_y_pos = 1;
+        var platform = new Platform(platform_starting_x_pos, platform_starting_y_pos);
+        var all_platforms = [platform]
+
+        game_settings.player.starting_x_pos = 1;
+        game_settings.player.starting_y_pos = 2;
+        var player_entity = new Player();
+
+        var assertion = player_entity.check_platform_underneath(all_platforms);
+        var value_test = false;
+        assert.ok(assertion == value_test);
+      });
+
+      QUnit.test( "Test that the platform is not under player - platform below", function(assert) {
+        game_settings.objects.platforms.wide = 100;
+        game_settings.objects.platforms.high = 100;
+        game_settings.positions.wide = 100;
+        game_settings.positions.high = 100;
+
+        var platform_starting_x_pos = 1;
+        var platform_starting_y_pos = 1;
+        var platform = new Platform(platform_starting_x_pos, platform_starting_y_pos);
+        var all_platforms = [platform]
+
+        game_settings.player.starting_x_pos = 1;
+        game_settings.player.starting_y_pos = 3;
+        var player_entity = new Player();
+
+        var assertion = player_entity.check_platform_underneath(all_platforms);
+        var value_test = false;
+        assert.ok(assertion == value_test);
+      });
+
+      QUnit.test( "Test that the platform is not under player - platform above", function(assert) {
+        game_settings.objects.platforms.wide = 100;
+        game_settings.objects.platforms.high = 100;
+        game_settings.positions.wide = 100;
+        game_settings.positions.high = 100;
+
+        var platform_starting_x_pos = 1;
+        var platform_starting_y_pos = 3;
+        var platform = new Platform(platform_starting_x_pos, platform_starting_y_pos);
+        var all_platforms = [platform]
+
+        game_settings.player.starting_x_pos = 1;
+        game_settings.player.starting_y_pos = 1;
+        var player_entity = new Player();
+
+        var assertion = player_entity.check_platform_underneath(all_platforms);
+        var value_test = false;
+        assert.ok(assertion == value_test);
+      });
+
+    }
+
+    test_platform_player_interact()
 
   </script>
 </body>
