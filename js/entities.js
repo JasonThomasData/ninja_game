@@ -94,7 +94,9 @@ var Player = function(){
   var starting_y_pos = game_settings.player.starting_y_pos;
   Person.call(this, px_per_move_x, px_per_jump_y, starting_x_pos, starting_y_pos);
   this.move_order = function(direction){
-    this.px_to_move_x = this.px_per_move_x;
+    if (this.platform_underneath) {
+      this.px_to_move_x = this.px_per_move_x;      
+    }
     if (direction == 'right'){
       this.direction_facing = 'right';
     } else {
