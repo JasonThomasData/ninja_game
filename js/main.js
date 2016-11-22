@@ -1,29 +1,49 @@
-'''
-This code is taken from here - http://codeincomplete.com/posts/javascript-game-foundations-the-game-loop/
+var Game = function() {
+  this.player_entity = new Player();
+  this.enemies_all = [];
 
-Anyway, I know what it does. This uses the difference between last (set at the end of the loop)
-and now (set at the start of the loop), to calculate how long each loop actually takes on the
-client side. It is important for the user exp that the game loop takes the same amount of time
-for every user. In the while loop, the board keeps updating without animating. JavaScript allows
-the requestAnimationFrame to let us know when we can animate again, so there is no point updating
-the canvas any more than that.
-'''
+  var one_platform = new Platform(1,1);
+  var two_platform = new Platform(2,0);
+  var three_platform = new Platform(3,0);
+  this.all_platforms = [one_platform, two_platform, three_platform];
+  this.canvas = document.getElementById('drawing_board');
+  this.canvas.width = game_settings.animation.frame.width;
+  this.canvas.height = game_settings.animation.frame.height;
+  this.ctx = this.canvas.getContext("2d");
 
-var now,
-    dt   = 0,
-    last = timestamp(),
-    step = 1/60;
-
-function frame() {
-  now = timestamp();
-  dt = dt + Math.min(1, (now - last) / 1000);
-  while(dt > step) {
-    dt = dt - step;
-    update(step);
+  this.game_update = function() {
+    this.player_entity.update(this.all_platforms);
+    for (var i = 0; i < this.enemies_all.length; i++) {
+      this.enemies_all[i].update(this.all_platforms);
+    }
   }
-  render(dt);
-  last = now;
-  requestAnimationFrame(frame);
+
+  this.draw_shape = function(object, colour) {
+    //The canvas draws from top left, but we count from bottom left
+    var x_pos = object.x_pos;
+    var y_pos = (game_settings.animation.frame.height - object.high) - object.y_pos;
+    this.ctx.beginPath();
+    this.ctx.rect(x_pos, y_pos, object.wide, object.high);
+    this.ctx.fillStyle = colour;
+    this.ctx.fill();
+  }
+
+  this.game_render = function() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    //Draw player
+    this.draw_shape(this.player_entity, '#000')
+    for (var i = 0; i < this.all_platforms.length; i++) {
+      var one_platform = this.all_platforms[i];
+      this.draw_shape(one_platform, '#669900')
+    }
+  }
 }
 
-requestAnimationFrame(frame);
+var current_game = new Game();
+
+function game_loop() {
+  current_game.game_update();
+  current_game.game_render();
+  requestAnimationFrame(game_loop);
+}
+game_loop()
