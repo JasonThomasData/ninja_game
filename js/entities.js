@@ -1,4 +1,3 @@
-//This is the class that the player and enemy classes inherit from
 var Person = function(px_per_move_x, px_per_jump_y, starting_x_pos, starting_y_pos){
   /*
   When this is initialised, it will have a starting_pos of 1 or so. 
@@ -6,26 +5,30 @@ var Person = function(px_per_move_x, px_per_jump_y, starting_x_pos, starting_y_p
   This positioning system is used for initialising objects only, not afterwards.
   */
 
-  this.direction_facing = 'right'; //Can also be left
-  this.falling = false; // true if there's no platform underneath, provided the player hasn't jumped.
+  this.direction_facing = 'right'; //left
+  this.falling = false; // true if no platform under, false if player jumping.
   this.platform_underneath = false;
   this.px_per_move_x = px_per_move_x; // Minimum move distance in px. Each key press, set this back to its default
-  this.px_to_move_x = 0;  //When there's a right or left event, and the entity is on the ground, this will be updated
+  this.px_x_move_remaining = 0;  //When there's a right or left event, and the entity is on the ground, this will be updated
   this.px_per_jump_y = px_per_jump_y;
-  this.px_to_jump_y = 0;
+  this.px_y_jump_remaining = 0;
   this.wide = game_settings.player.wide;
   this.high = game_settings.player.high;
   this.x_pos = starting_x_pos * game_settings.positions.wide;
   this.y_pos = starting_y_pos * game_settings.positions.high;
   this.update = function(all_platforms){
+    // Call from main loop. Control the entity.
 
-    // This is the function to call from the loop. The entity will do what is told from here.
     this.platform_underneath = this.check_platform_underneath(all_platforms);
 
-    //The entity is falling if there's no platform underneath and the entity has not jumped.
-    if (this.platform_underneath || this.px_to_jump_y > 0) {
+    var collision_detected = this.detect_collision(all_platforms);
+    if (collision_detected) {
+      this.px_x_move_remaining = 0;
+    }
+
+    if (this.platform_underneath || this.px_y_jump_remaining > 0) {
       this.falling = false;
-    } else if (this.platform_underneath == false && this.px_to_jump_y <= 0) {
+    } else if (this.platform_underneath == false && this.px_y_jump_remaining <= 0) {
       this.falling = true;
     }
 
@@ -33,26 +36,25 @@ var Person = function(px_per_move_x, px_per_jump_y, starting_x_pos, starting_y_p
     this.move_y();
   }
   this.move_x = function(){
-    //Updates the x_pos, gravity handled in another function
-    //The 2 in increments, previously 1, should be an option in game_settings
-    if (this.px_to_move_x >= 1) {
+    //The 1 in increments should be an option in game_settings
+    if (this.px_x_move_remaining >= 1) {
       if (this.direction_facing == 'right') {
-        this.x_pos += 2;
+        this.x_pos += 1;
       } else {
-        this.x_pos -= 2;
+        this.x_pos -= 1;
       }
       if (this.platform_underneath) {
-        this.px_to_move_x -= 1;
+        this.px_x_move_remaining -= 1;
       }
     }
   }
   this.move_y = function(){
-    //Updates y_pos, gravity or jumping
-    //For now, we use cartesian coordinates, so starting from bottom left
-    //The 2 in increments, previously 1, should be an option in game_settings
-    if (this.px_to_jump_y >= 1) {
+    //Updates - gravity or jumping
+    //Using cartesian coordinates (bottom left 0), but canvas draws (top left 0).
+    //The 1 in increments should be an option in game_settings
+    if (this.px_y_jump_remaining >= 1) {
       this.y_pos += 2;
-      this.px_to_jump_y -= 1;
+      this.px_y_jump_remaining -= 1;
     } else if (this.falling) {
       this.y_pos -= 2;
     }
@@ -60,8 +62,8 @@ var Person = function(px_per_move_x, px_per_jump_y, starting_x_pos, starting_y_p
   this.check_platform_underneath = function(all_platforms) {
     var entity_left_side = this.x_pos;
     var entity_right_side = this.x_pos + this.wide;
-    var entity_under_side = this.y_pos
-    var entity_centre = (entity_left_side + entity_right_side) / 2
+    var entity_under_side = this.y_pos;
+    var entity_centre = (entity_left_side + entity_right_side) / 2;
 
     for(var i = 0; i < all_platforms.length; i++){
 
@@ -80,13 +82,37 @@ var Person = function(px_per_move_x, px_per_jump_y, starting_x_pos, starting_y_p
       }
     }
 
-    // At this point, there was no platform detected underneath
     return false;
+  }
+  this.detect_collision = function(all_platforms) {
 
+    var entity_left_side = this.x_pos;
+    var entity_right_side = this.x_pos + this.wide;
+    var entity_bottom_side = this.y_pos;
+    var entity_top_side = this.y_pos + this.high;
+
+    for(var i = 0; i < all_platforms.length; i++){
+
+      var platform_left_side = all_platforms[i].x_pos;
+      var platform_right_side = all_platforms[i].x_pos + all_platforms[i].wide;
+      var platform_bottom_side = all_platforms[i].y_pos;
+      var platform_top_side = all_platforms[i].y_pos + all_platforms[i].high;
+
+      if ((entity_left_side == platform_right_side && this.direction_facing == 'left') ||
+        (entity_right_side == platform_left_side && this.direction_facing == 'right')) {
+        if (entity_bottom_side >= platform_bottom_side && entity_bottom_side < platform_top_side) {
+          return true;
+        } else if (entity_top_side > platform_top_side && entity_top_side <= platform_bottom_side) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 }
 
-//This is our basic player object
+//This is our basic player object - inherits from the Person class
 var Player = function(){
   var px_per_move_x = game_settings.player.px_per_move_x;
   var px_per_jump_y = game_settings.player.px_per_jump_y;
@@ -94,15 +120,15 @@ var Player = function(){
   var starting_y_pos = game_settings.player.starting_y_pos;
   Person.call(this, px_per_move_x, px_per_jump_y, starting_x_pos, starting_y_pos);
   this.move_order = function(direction) {
-    //A move order is only effective if the entity is on thr ground at the time.
+    //Move order effective if entity is on ground.
     if (this.platform_underneath) {
-      //If the order to move is in the opposite direction, then the move is less (braking).
+      //If order to move is in the opposite direction, then the move is less (braking).
       if (this.direction_facing == direction) {
-        var update_px_to_move_x = this.px_per_move_x;
+        var update_px_x_move_remaining = this.px_per_move_x;
       } else {
-        var update_px_to_move_x = this.px_per_move_x - this.px_to_move_x;
+        var update_px_x_move_remaining = this.px_per_move_x - this.px_x_move_remaining;
       }
-      this.px_to_move_x = update_px_to_move_x;
+      this.px_x_move_remaining = update_px_x_move_remaining;
     }
     //The entity can always change its facing direction, including while jumping.
     if (direction == 'right'){
@@ -112,9 +138,13 @@ var Player = function(){
     }
   }
   this.jump_order = function(direction){
-    //Only only the order if the player is not falling
     if (this.platform_underneath){
-      this.px_to_jump_y = this.px_per_jump_y;
+      this.px_y_jump_remaining = this.px_per_jump_y;
+    }
+  }
+  this.stop_order = function(direction){
+    if (this.platform_underneath){
+      this.px_x_move_remaining = 0;
     }
   }
 }
