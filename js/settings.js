@@ -5,34 +5,52 @@
 
 var game_settings = {
   positions: {
-    wide: 100,
-    high: 100
+    wide: 50,
+    high: 50
   },
   player: {
     starting_hp: 100,
-    wide: 100,
-    high: 100,
-    starting_x_pos: 0,
-    starting_y_pos: 0,
-    px_per_move_x: 100,
-    px_per_jump_y: 100
+    wide: 50,
+    high: 75,
+    starting_x_pos: 1,
+    starting_y_pos: 4,
+    px_per_move_x: 50,
+    px_per_jump_y: 50
   },
   enemies: {
     starting_hp: 50,
     px_per_move_x: 50,
-    px_per_jump_y: 100
+    px_per_jump_y: 50
   },
   objects: {
     platforms: {
-      wide: 100,
-      high: 100
+      wide: 50,
+      high: 50
     }
   },
   animation: {
     frame: {
-      width: 500,
-      height: 300
+      width: 700,
+      height: 500
     },
     target_fps: 15
+  },
+  controls: {
+    up_move: {
+      key: 'w',
+      code_number: 87
+    },
+    left_move: {
+      key: 'a',
+      code_number: 65
+    },
+    right_move: {
+      key: 'd',
+      code_number: 68
+    },
+    down_move: {
+      key: 's',
+      code_number: 83
+    }
   }
 }
