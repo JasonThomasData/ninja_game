@@ -1,0 +1,5 @@
+These sprite objects were made at Piskel - http://www.piskelapp.com/ - and I've kept the files for editing, but could also just edit them in an image editor.
+
+The sprites are 26px wide by 31px high. The characters stand on an area that is 20px wide, but the images extend an extra 6px in front. The reason is we need to animate puches and weapon hits etc.
+
+I think a good size for these characters would be 4x... so 80px wide (not including weapon buffer) or 104px wide (including weapon buffer), and 124px high.
