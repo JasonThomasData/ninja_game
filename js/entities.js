@@ -9,9 +9,9 @@ var Person = function(px_per_move_x, px_per_jump_y, starting_x_pos, starting_y_p
   this.falling = false; // true if no platform under, false if player jumping.
   this.platform_underneath = false;
   this.px_per_move_x = px_per_move_x; // Minimum move distance in px. Each key press, set this back to its default
-  this.px_to_move_x = 0;  //When there's a right or left event, and the entity is on the ground, this will be updated
+  this.px_x_move_remaining = 0;  //When there's a right or left event, and the entity is on the ground, this will be updated
   this.px_per_jump_y = px_per_jump_y;
-  this.px_to_jump_y = 0;
+  this.px_y_jump_remaining = 0;
   this.wide = game_settings.player.wide;
   this.high = game_settings.player.high;
   this.x_pos = starting_x_pos * game_settings.positions.wide;
@@ -23,12 +23,12 @@ var Person = function(px_per_move_x, px_per_jump_y, starting_x_pos, starting_y_p
 
     var collision_detected = this.detect_collision(all_platforms);
     if (collision_detected) {
-      this.px_to_move_x = 0;
+      this.px_x_move_remaining = 0;
     }
 
-    if (this.platform_underneath || this.px_to_jump_y > 0) {
+    if (this.platform_underneath || this.px_y_jump_remaining > 0) {
       this.falling = false;
-    } else if (this.platform_underneath == false && this.px_to_jump_y <= 0) {
+    } else if (this.platform_underneath == false && this.px_y_jump_remaining <= 0) {
       this.falling = true;
     }
 
@@ -37,14 +37,14 @@ var Person = function(px_per_move_x, px_per_jump_y, starting_x_pos, starting_y_p
   }
   this.move_x = function(){
     //The 1 in increments should be an option in game_settings
-    if (this.px_to_move_x >= 1) {
+    if (this.px_x_move_remaining >= 1) {
       if (this.direction_facing == 'right') {
         this.x_pos += 1;
       } else {
         this.x_pos -= 1;
       }
       if (this.platform_underneath) {
-        this.px_to_move_x -= 1;
+        this.px_x_move_remaining -= 1;
       }
     }
   }
@@ -52,9 +52,9 @@ var Person = function(px_per_move_x, px_per_jump_y, starting_x_pos, starting_y_p
     //Updates - gravity or jumping
     //Using cartesian coordinates (bottom left 0), but canvas draws (top left 0).
     //The 1 in increments should be an option in game_settings
-    if (this.px_to_jump_y >= 1) {
+    if (this.px_y_jump_remaining >= 1) {
       this.y_pos += 2;
-      this.px_to_jump_y -= 1;
+      this.px_y_jump_remaining -= 1;
     } else if (this.falling) {
       this.y_pos -= 2;
     }
@@ -124,11 +124,11 @@ var Player = function(){
     if (this.platform_underneath) {
       //If order to move is in the opposite direction, then the move is less (braking).
       if (this.direction_facing == direction) {
-        var update_px_to_move_x = this.px_per_move_x;
+        var update_px_x_move_remaining = this.px_per_move_x;
       } else {
-        var update_px_to_move_x = this.px_per_move_x - this.px_to_move_x;
+        var update_px_x_move_remaining = this.px_per_move_x - this.px_x_move_remaining;
       }
-      this.px_to_move_x = update_px_to_move_x;
+      this.px_x_move_remaining = update_px_x_move_remaining;
     }
     //The entity can always change its facing direction, including while jumping.
     if (direction == 'right'){
@@ -139,7 +139,12 @@ var Player = function(){
   }
   this.jump_order = function(direction){
     if (this.platform_underneath){
-      this.px_to_jump_y = this.px_per_jump_y;
+      this.px_y_jump_remaining = this.px_per_jump_y;
+    }
+  }
+  this.stop_order = function(direction){
+    if (this.platform_underneath){
+      this.px_x_move_remaining = 0;
     }
   }
   this.stop_order = function(direction){
