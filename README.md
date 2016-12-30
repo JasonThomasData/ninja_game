@@ -14,26 +14,28 @@ Here's some gifs of enemies I've made so far.
 
 This project will read text files and create levels that way. Save a level like this:
 
-.. .. .. .. .. ..
-ni .. .. sk zo w1
-g1 g1 g1 g1 g1 w2
-g2 g2 g2 g2 g2 w2
-g3 g3 g3 g3 g3 g3
+    .. .. .. .. .. ..
+    ni .. .. sk zo w1
+    g1 g1 g1 g1 g1 w2
+    g2 g2 g2 g2 g2 w2
+    g3 g3 g3 g3 g3 g3
 
 The double dots are just spaces, and you could replace those with whatever you feel like. The other
 squares a refereces to objects. These translate as:
 
-Entities
-```ni``` - ninja/player. There should only be one of these.
-```sk``` - skeleton. The most basic enemy, but can also be reborn from other dead creatures.
-```zo``` - zombie. More hurtful and more HP than the skeleton.
+#####Entities
 
-Blocks/objects
-```g1``` - ground, top level, grassy
-```g2``` - ground, second level, different texture
-```g3``` - ground, third level, all other ground should be this consistent texture.
-```w1``` - wall, top level, slightly brighter than others
-```w2``` - wall, second level, darker
+    ni - ninja/player. There should only be one of these.
+    sk - skeleton. The most basic enemy, but can also be reborn from other dead creatures.
+    zo - zombie. More hurtful and more HP than the skeleton.
+
+#####Blocks/objects
+
+    g1 - ground, top level, grassy
+    g2 - ground, second level, different texture
+    g3 - ground, third level, all other ground should be this consistent texture.
+    w1 - wall, top level, slightly brighter than others
+    w2 - wall, second level, darker
 
 It would be super fun the make the boss of this game Vladimir Putin, and have the minor boss Donald
 Trump or something. Trump could throw his wig as a returning projectile. Putin could fire bullets
