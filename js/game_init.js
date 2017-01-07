@@ -24,6 +24,9 @@ function populate_board(objects, map_data) {
       } else if (line_separated[j] == 'zo') {
         var zombie = new Zombie(j,i);
         objects['enemies'].push(zombie);
+      } else if (line_separated[j] == 'sw') {
+        var skeleton_wizard = new SkeletonWizard(j,i);
+        objects['enemies'].push(skeleton_wizard);
       } else if (line_separated[j] == 'w1') {
         var wall_one = new WallOne(j,i);
         objects['blocks'].push(wall_one);
