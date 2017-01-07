@@ -11,8 +11,8 @@ var game_settings = {
     maps_folder: 'maps/'
   },
   positions: {
-    wide: 60,
-    high: 60
+    wide: 62,
+    high: 62
   },
   sprite: {
     weapon_offset: 6,
@@ -26,27 +26,28 @@ var game_settings = {
     }
   },
   entity: {
-    wide: 60,
-    high: 90,
-    y_fall_speed_px: 1,
-    attack_duration: 9
+    wide: 62,
+    high: 93,
+    y_fall_speed_px: 1
   },
   player: {
     starting_hp: 100,
-    px_per_move_x: 60,
+    px_per_move_x: 62,
     px_jump_force_y: 15,
-    x_move_speed_px: 3
+    x_move_speed_px: 3,
+    attack_duration: 12
   },
   enemies: {
     starting_hp: 50,
-    px_per_move_x: 60,
+    px_per_move_x: 62,
     px_jump_force_y: 13,
-    x_move_speed_px: 1
+    x_move_speed_px: 1,
+    attack_duration: 32
   },
   objects: {
     blocks: {
-      wide: 60,
-      high: 60
+      wide: 62,
+      high: 62
     }
   },
   animation: {
@@ -78,8 +79,8 @@ var game_settings = {
       code_number: 115
     },
     attack: {
-      key: 'space',
-      code_number: 32
+      key: 'comma',
+      code_number: 44
     }
   }
 }
