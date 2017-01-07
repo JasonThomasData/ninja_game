@@ -9,6 +9,7 @@ Here's some gifs of enemies I've made so far.
 
 ![zombie_gif](/demo/zombie.gif)
 ![skeleton_gif](/demo/skeleton.gif)
+![skeleton_wizard_gif(/demo/skeleton_wizard_right.gif)
 
 ###Creating a map
 
@@ -21,7 +22,7 @@ This project will read text files and create levels that way. Save a level like 
     g3 g3 g3 g3 g3 g3
 
 The double dots are just spaces, and you could replace those with whatever you feel like. The other
-squares a refereces to objects. These translate as:
+squares are references to objects. These translate as:
 
 #####Entities
 
