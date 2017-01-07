@@ -9,7 +9,7 @@ Here's some gifs of enemies I've made so far.
 
 ![zombie_gif](/demo/zombie.gif)
 ![skeleton_gif](/demo/skeleton.gif)
-![skeleton_wizard_gif(/demo/skeleton_wizard_right.gif)
+![skeleton_wizard_gif](/demo/skeleton_wizard_right.gif)
 
 ###Creating a map
 
