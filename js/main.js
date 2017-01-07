@@ -1,4 +1,3 @@
-
 var Game = function() {
   this.objects = {
     "player" : null,
@@ -17,6 +16,7 @@ var Game = function() {
   this.ctx.webkitImageSmoothingEnabled = false;
   this.ctx.msImageSmoothingEnabled = false;
 
+  //Later, we'll offset the screen size and player coords so player always appears in screen centre
   this.player_x_context = 0;
   this.player_y_context = 0;
 
@@ -33,21 +33,23 @@ var Game = function() {
   }
 
   this.draw_shape = function(object) {
-    /*
-    The canvas draws from top left, but we count from bottom left.
-    All objects need to be adjusted for showing in relation to the player in centre.
-    This is where you enlarge the shape the object is in if it needs to show a weapon.
-    */
+
+    //The canvas draws from top left, but we count from bottom left, (Cartesian coords).
     var y_pos = (game_settings.animation.frame.height - object.high) - object.y_pos;
+
+    //All objects need to be adjusted for showing in relation to the player in centre.
     y_pos += this.player_y_context;
     var x_pos = object.x_pos - this.player_x_context;
     var object_wide = object.wide;
+
+    //Enlarge the shape the object appears in if it needs to show a weapon (blocks don't).
     if (object.direction_facing == 'left') {
       x_pos -= (object.display_weapon_offset - 1);
     }
     if (object.display_weapon_offset != undefined) {
       object_wide += object.display_weapon_offset;
     }
+
     var sprite_source_x = object.sprite_source_x;
     var sprite_source_y = object.sprite_source_y;
     this.ctx.drawImage(object.sprite_sheet, sprite_source_x, sprite_source_y, object.sprite_source_width,
@@ -99,8 +101,10 @@ var objects = current_game.objects;
 load_map(map_location, map_name, objects);
 
 function game_loop() {
+  //Should put these function calls inside a time delta, so the screen only updates at the max speed
+  //framerate specified. Both should be in the delta.
   current_game.game_update();
   current_game.game_render();
   requestAnimationFrame(game_loop);
 }
-game_loop()
+game_loop();
