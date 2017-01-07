@@ -1,4 +1,5 @@
 document.addEventListener('keypress', function(event) {
+  event.preventDefault();
   var player = current_game.objects['player'];
   if (event.which == game_settings.controls.left_move.code_number){
     player.move_order('left');
