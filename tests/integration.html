@@ -4,18 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <title>QUnit - tests</title>
-  <link rel="stylesheet" href="vendor/QUnit/qunit-2.0.1.css">
-  <script src="vendor/QUnit/qunit-2.0.1.js"></script>
+  <link rel="stylesheet" href="../vendor/QUnit/qunit-2.0.1.css">
+  <script src="../vendor/QUnit/qunit-2.0.1.js"></script>
 </head>
 <body>
   <div id="qunit"></div>
   <div id="qunit-fixture"></div>
   <canvas id="canvas"></canvas>
 
-  <script src="js/settings.js"></script>
-  <script src="js/sprite_map.js"></script>
-  <script src="js/entities.js"></script>
-  <script src="js/objects.js"></script>
+  <script src="../js/settings.js"></script>
+  <script src="../js/sprite_map.js"></script>
+  <script src="../js/entity_attributes.js"></script>
+  <script src="../js/entities.js"></script>
+  <script src="../js/environment.js"></script>
 
   <script>
 
@@ -23,7 +24,7 @@
       /* entities.js */
 
       QUnit.test( "Test that the player object is initialised", function(assert) {
-        game_settings.player.px_per_move_x = 100
+        game_settings.game_environment.player.px_per_move_x = 100
         var player_entity = new Player();
 
         var assertion = player_entity.px_per_move_x;
@@ -32,7 +33,7 @@
       });
 
       QUnit.test( "Test that the player object is initialised at correct location", function(assert) {
-        game_settings.positions.wide = 100
+        game_settings.game_init.positions.wide = 100
         var player_entity = new Player(5, 1);
 
         var assertion = player_entity.x_pos;
@@ -41,7 +42,7 @@
       });
 
       QUnit.test( "Test that the enemy object is initialised at correct location", function(assert) {
-        game_settings.positions.wide = 100;
+        game_settings.game_init.positions.wide = 100;
         var starting_x_pos = 7
         var starting_y_pos = 0
         var enemy_entity = new Zombie(starting_x_pos, starting_y_pos);
@@ -99,7 +100,7 @@
       });
 
       QUnit.test( "Test that the enemy object moves right on update", function(assert) {
-        game_settings.positions.wide = 100
+        game_settings.game_init.positions.wide = 100
         var enemy_entity = new Zombie(1, 1);
         var all_blocks = [];
         enemy_entity.direction_facing = 'right';
@@ -114,7 +115,7 @@
       });
 
       QUnit.test( "Test that the enemy object moves left on update", function(assert) {
-        game_settings.positions.wide = 100
+        game_settings.game_init.positions.wide = 100
         var enemy_entity = new Zombie(1, 1);
         var all_blocks = [];
         enemy_entity.direction_facing = 'left';
@@ -135,7 +136,7 @@
       /* entities.js */
 
       QUnit.test( "Test that the player's order to move right changes the player object state", function(assert) {
-        game_settings.player.px_per_move_x = 100
+        game_settings.game_environment.player.px_per_move_x = 100
         var player_entity = new Player(null, null);
         player_entity.block_underneath = true;
         player_entity.move_order('right')
@@ -156,7 +157,7 @@
       });
 
       QUnit.test( "Test that the player's order to jump changes the player object state", function(assert) {
-        game_settings.player.px_jump_force_y = 10;
+        game_settings.game_environment.player.px_jump_force_y = 10;
         var player_entity = new Player(null, null);
         player_entity.block_underneath = true;
         player_entity.jump_order();
@@ -167,7 +168,7 @@
       });
 
       QUnit.test( "Test that the player's order to jump is ignored, because there' no block underneath", function(assert) {
-        game_settings.player.px_y_jump_remaining = 100;
+        game_settings.game_environment.player.px_y_jump_remaining = 100;
         var player_entity = new Player();
         player_entity.px_y_jump_remaining = 0;
         player_entity.falling = true;
@@ -186,10 +187,10 @@
       /* js/objects.js */
 
       QUnit.test( "Test that the block is initialised - 1", function(assert) {
-        game_settings.objects.blocks.wide = 100;
-        game_settings.objects.blocks.high = 100;
-        var starting_x_pos = 0
-        var starting_y_pos = 0
+        game_settings.game_environment.objects.blocks.wide = 100;
+        game_settings.game_environment.objects.blocks.high = 100;
+        var starting_x_pos = 1
+        var starting_y_pos = 1
         var block = new GroundOne(starting_x_pos, starting_y_pos);
 
         var assertion = block.wide;
@@ -198,14 +199,15 @@
       });
 
       QUnit.test( "Test that the block is initialised - 2", function(assert) {
-        game_settings.objects.blocks.wide = 100;
-        game_settings.objects.blocks.high = 100;
+        game_settings.game_init.positions.wide = 100;
+        game_settings.game_init.positions.high = 100;
         var starting_x_pos = 5
-        var starting_y_pos = 0
+        var starting_y_pos = 1
         var block = new GroundOne(starting_x_pos, starting_y_pos);
 
         var assertion = block.x_pos;
         var value_test = 500;
+        console.log(assertion);
         assert.ok(assertion == value_test);
       });
 
@@ -216,10 +218,10 @@
       /* js/objects.js, js/entities.js*/
 
       QUnit.test( "Test that the block is under player - one is", function(assert) {
-        game_settings.objects.blocks.wide = 100;
-        game_settings.objects.blocks.high = 100;
-        game_settings.positions.wide = 100;
-        game_settings.positions.high = 100;
+        game_settings.game_environment.objects.blocks.wide = 100;
+        game_settings.game_environment.objects.blocks.high = 100;
+        game_settings.game_init.positions.wide = 100;
+        game_settings.game_init.positions.high = 100;
 
         var block_1_starting_x_pos = 1;
         var block_1_starting_y_pos = 1;
@@ -231,78 +233,79 @@
 
         var all_blocks = [block_1, block_2]
 
-        var player_entity = new Player(2, 2);
+        var player_starting_x_pos = 2;
+        var player_starting_y_pos = 2;
+        var player_entity = new Player(player_starting_x_pos, player_starting_y_pos);
 
-        var assertion = player_entity.check_block_underneath(all_blocks);
-        var value_test = true;
-        assert.ok(assertion == value_test);
+        player_entity.check_block_underneath(all_blocks);
+
+        assert.ok(player_entity.block_underneath == true);
       });
 
       QUnit.test( "Test that the block is not under player - block to right", function(assert) {
-        game_settings.objects.blocks.wide = 100;
-        game_settings.objects.blocks.high = 100;
-        game_settings.positions.wide = 100;
-        game_settings.positions.high = 100;
+        game_settings.game_environment.objects.blocks.wide = 100;
+        game_settings.game_environment.objects.blocks.high = 100;
+        game_settings.game_init.positions.wide = 100;
+        game_settings.game_init.positions.high = 100;
 
         var block_starting_x_pos = 5;
         var block_starting_y_pos = 1;
         var block = new WallOne(block_starting_x_pos, block_starting_y_pos);
+
         var all_blocks = [block]
 
-        game_settings.player.starting_x_pos = 1;
-        game_settings.player.starting_y_pos = 2;
-        var player_entity = new Player();
+        var player_starting_x_pos = 1;
+        var player_starting_y_pos = 1;
+        var player_entity = new Player(player_starting_x_pos, player_starting_y_pos);
 
-        var assertion = player_entity.check_block_underneath(all_blocks);
-        var value_test = false;
-        assert.ok(assertion == value_test);
+        assert.ok(player_entity.block_underneath == false);
       });
 
       QUnit.test( "Test that the block is not under player - block below", function(assert) {
-        game_settings.objects.blocks.wide = 100;
-        game_settings.objects.blocks.high = 100;
-        game_settings.positions.wide = 100;
-        game_settings.positions.high = 100;
+        game_settings.game_environment.objects.blocks.wide = 100;
+        game_settings.game_environment.objects.blocks.high = 100;
+        game_settings.game_init.positions.wide = 100;
+        game_settings.game_init.positions.high = 100;
 
         var block_starting_x_pos = 1;
         var block_starting_y_pos = 1;
         var block = new WallTwo(block_starting_x_pos, block_starting_y_pos);
         var all_blocks = [block]
 
-        game_settings.player.starting_x_pos = 1;
-        game_settings.player.starting_y_pos = 3;
-        var player_entity = new Player();
+        var player_starting_x_pos = 1;
+        var player_starting_y_pos = 3;
+        var player_entity = new Player(player_starting_x_pos, player_starting_y_pos);
 
-        var assertion = player_entity.check_block_underneath(all_blocks);
-        var value_test = false;
-        assert.ok(assertion == value_test);
+        player_entity.check_block_underneath(all_blocks);
+
+        assert.ok(player_entity.block_underneath == false);
       });
 
       QUnit.test( "Test that the block is not under player - block above", function(assert) {
-        game_settings.objects.blocks.wide = 100;
-        game_settings.objects.blocks.high = 100;
-        game_settings.positions.wide = 100;
-        game_settings.positions.high = 100;
+        game_settings.game_environment.objects.blocks.wide = 100;
+        game_settings.game_environment.objects.blocks.high = 100;
+        game_settings.game_init.positions.wide = 100;
+        game_settings.game_init.positions.high = 100;
 
         var block_starting_x_pos = 1;
         var block_starting_y_pos = 3;
         var block = new GroundTwo(block_starting_x_pos, block_starting_y_pos);
         var all_blocks = [block]
 
-        game_settings.player.starting_x_pos = 1;
-        game_settings.player.starting_y_pos = 1;
-        var player_entity = new Player();
+        var player_starting_x_pos = 1;
+        var player_starting_y_pos = 1;
+        var player_entity = new Player(player_starting_x_pos, player_starting_y_pos);
 
-        var assertion = player_entity.check_block_underneath(all_blocks);
-        var value_test = false;
-        assert.ok(assertion == value_test);
+        player_entity.check_block_underneath(all_blocks);
+
+        assert.ok(player_entity.block_underneath == false);
       });
 
       QUnit.test( "Test that player's falling property is false when block underneath", function(assert) {
-        game_settings.objects.blocks.wide = 100;
-        game_settings.objects.blocks.high = 100;
-        game_settings.positions.wide = 100;
-        game_settings.positions.high = 100;
+        game_settings.game_environment.objects.blocks.wide = 100;
+        game_settings.game_environment.objects.blocks.high = 100;
+        game_settings.game_init.positions.wide = 100;
+        game_settings.game_init.positions.high = 100;
 
         var block_starting_x_pos = 1;
         var block_starting_y_pos = 1;
@@ -313,16 +316,14 @@
 
         player_entity.update(all_blocks)
 
-        var assertion = player_entity.falling;
-        var value_test = false;
-        assert.ok(assertion == value_test);
+        assert.ok(player_entity.falling == false);
       });
 
       QUnit.test( "Test that player's block_underneath property is true when block underneath", function(assert) {
-        game_settings.objects.blocks.wide = 100;
-        game_settings.objects.blocks.high = 100;
-        game_settings.positions.wide = 100;
-        game_settings.positions.high = 100;
+        game_settings.game_environment.objects.blocks.wide = 100;
+        game_settings.game_environment.objects.blocks.high = 100;
+        game_settings.game_init.positions.wide = 100;
+        game_settings.game_init.positions.high = 100;
 
         var block_starting_x_pos = 1;
         var block_starting_y_pos = 1;
@@ -339,18 +340,18 @@
       });
 
       QUnit.test( "Test that player's block_underneath property is false when there's no block underneath", function(assert) {
-        game_settings.objects.blocks.wide = 100;
-        game_settings.objects.blocks.high = 100;
-        game_settings.positions.wide = 100;
-        game_settings.positions.high = 100;
+        game_settings.game_environment.objects.blocks.wide = 100;
+        game_settings.game_environment.objects.blocks.high = 100;
+        game_settings.game_init.positions.wide = 100;
+        game_settings.game_init.positions.high = 100;
 
         var block_starting_x_pos = 1;
         var block_starting_y_pos = 1;
         var block = new GroundThree(block_starting_x_pos, block_starting_y_pos);
         var all_blocks = [block];
 
-        game_settings.player.starting_x_pos = 2;
-        game_settings.player.starting_y_pos = 2;
+        game_settings.game_environment.player.starting_x_pos = 2;
+        game_settings.game_environment.player.starting_y_pos = 2;
         var player_entity = new Player();
 
         player_entity.update(all_blocks);
@@ -362,10 +363,10 @@
 
 
       QUnit.test( "Test that player's falling property is false when block is not underneath and the player has jumped", function(assert) {
-        game_settings.objects.blocks.wide = 100;
-        game_settings.objects.blocks.high = 100;
-        game_settings.positions.wide = 100;
-        game_settings.positions.high = 100;
+        game_settings.game_environment.objects.blocks.wide = 100;
+        game_settings.game_environment.objects.blocks.high = 100;
+        game_settings.game_init.positions.wide = 100;
+        game_settings.game_init.positions.high = 100;
 
         var block_starting_x_pos = 1;
         var block_starting_y_pos = 1;
@@ -384,10 +385,10 @@
       });
 
       QUnit.test( "Test that player's falling property is true when block is not underneath and the player has not jumped", function(assert) {
-        game_settings.objects.blocks.wide = 100;
-        game_settings.objects.blocks.high = 100;
-        game_settings.positions.wide = 100;
-        game_settings.positions.high = 100;
+        game_settings.game_environment.objects.blocks.wide = 100;
+        game_settings.game_environment.objects.blocks.high = 100;
+        game_settings.game_init.positions.wide = 100;
+        game_settings.game_init.positions.high = 100;
 
         var block_starting_x_pos = 1;
         var block_starting_y_pos = 1;

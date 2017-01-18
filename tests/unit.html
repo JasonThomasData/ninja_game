@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>QUnit - unit tests</title>
+  <link rel="stylesheet" href="../vendor/QUnit/qunit-2.0.1.css">
+  <script src="../vendor/QUnit/qunit-2.0.1.js"></script>
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+  <canvas id="canvas"></canvas>
+
+  <script src="../js/settings.js"></script>
+  <script src="../js/sprite_map.js"></script>
+  <script src="../js/entity_attributes.js"></script>
+  <script src="../js/entities.js"></script>
+  <script src="../js/environment.js"></script>
+
+  <script>
+
+    function test_entity_vertical_movement(){
+      /* entity_attributes.js */
+
+      QUnit.test( "Test this object starts new jump order - new_jump()", function(assert) {
+
+        var px_jump_force_y = 13;
+        var vertical_movement = new EntityVerticalMovement(px_jump_force_y);
+
+        vertical_movement.new_jump();
+
+        assert.ok(vertical_movement.vertical_movement_px == 13);
+
+      });
+
+      QUnit.test( "Test this object stops falling when told to - stop_falling()", function(assert) {
+
+        var px_jump_force_y = null;
+        var vertical_movement = new EntityVerticalMovement(px_jump_force_y);
+        vertical_movement.vertical_movement_px = -13;
+        vertical_movement.falling = true; //Mocking - from EntityPhysicalBeing()
+        vertical_movement.px_x_move_remaining = 100; //Mocking - from EntityHorizontalMovement()
+
+        vertical_movement.stop_falling();
+
+        assert.ok(vertical_movement.vertical_movement_px == 0);
+        assert.ok(vertical_movement.px_x_move_remaining == 0);
+        assert.ok(vertical_movement.falling == false);
+
+      });
+
+      QUnit.test( "Test - place_top_of_block()", function(assert) {
+
+        var px_jump_force_y = null;
+        var vertical_movement = new EntityVerticalMovement(px_jump_force_y);
+        game_settings.game_environment.objects.blocks.high = 50;
+        vertical_movement.y_pos = 285; //Mocking - from EntityPhysicalBeing()
+        //This is 15 below a block multiple - 6 blocks (300/50)
+
+        vertical_movement.place_top_of_block();
+
+        assert.ok(vertical_movement.y_pos == 300);
+
+      });
+
+      QUnit.test( "Test this object moves up based on its vertical_movement_px - move_y()", function(assert) {
+
+        var px_jump_force_y = null;
+        var vertical_movement = new EntityVerticalMovement(px_jump_force_y);
+        vertical_movement.y_fall_speed_px = 1;
+        vertical_movement.vertical_movement_px = 8;
+        vertical_movement.y_pos = 100; //Mocking - from EntityPhysicalBeing()
+
+        vertical_movement.move_y();
+
+        assert.ok(vertical_movement.vertical_movement_px == 7);
+        assert.ok(vertical_movement.y_pos == 107);
+
+      });
+
+      QUnit.test( "Test this object moves down based on its vertical_movement_px - move_y()", function(assert) {
+
+        var px_jump_force_y = null;
+        var vertical_movement = new EntityVerticalMovement(px_jump_force_y);
+        vertical_movement.y_fall_speed_px = 1;
+        vertical_movement.vertical_movement_px = 0;
+        vertical_movement.y_pos = 100; //Mocking - from EntityPhysicalBeing()
+
+        vertical_movement.move_y();
+
+        assert.ok(vertical_movement.vertical_movement_px == -1);
+        assert.ok(vertical_movement.y_pos == 99);
+
+      });
+
+    }
+    test_entity_vertical_movement()
+
+    function test_entity_horizontal_movement(){
+      /* entity_attributes.js */
+
+      QUnit.test( "Test - new_move() - in the same direction facing", function(assert) {
+
+        var px_per_move_x = 60;
+        var x_move_speed_px = 4;
+        var horizontal_movement = new EntityHorizontalMovement(px_per_move_x, x_move_speed_px);
+        horizontal_movement.direction_facing = 'right'; //Mocking - from EntityPhysicalBeing()
+
+        assert.ok(horizontal_movement.px_x_move_remaining == 0);
+
+        horizontal_movement.new_move();
+
+        assert.ok(horizontal_movement.px_x_move_remaining == 60);
+
+      });
+
+      QUnit.test( "Test - new_move() - in the opposite direction facing", function(assert) {
+
+        var px_per_move_x = 60;
+        var x_move_speed_px = 4;
+        var horizontal_movement = new EntityHorizontalMovement(px_per_move_x, x_move_speed_px);
+        horizontal_movement.px_x_move_remaining = 10;
+        horizontal_movement.direction_facing = 'left'; //Mocking - from EntityPhysicalBeing()
+
+        horizontal_movement.new_move('right');
+
+        assert.ok(horizontal_movement.px_x_move_remaining == 60);
+        assert.ok(horizontal_movement.direction_facing == 'right');
+
+      });
+
+      QUnit.test( "Test this object stops moving - stop_x_move() - stop_move order", function(assert) {
+
+        var px_per_move_x = null;
+        var x_move_speed_px = null;
+        var horizontal_movement = new EntityHorizontalMovement(px_per_move_x, x_move_speed_px);
+        horizontal_movement.px_moved = 10;
+        horizontal_movement.px_x_move_remaining = 10;
+
+        horizontal_movement.stop_x_move();
+
+        assert.ok(horizontal_movement.px_moved == 0);
+        assert.ok(horizontal_movement.px_x_move_remaining == 0);
+
+      });
+
+      QUnit.test( "Test this object moves left - move(), on surface", function(assert) {
+
+        var px_per_move_x = 60;
+        var x_move_speed_px = 4;
+        var horizontal_movement = new EntityHorizontalMovement(px_per_move_x, x_move_speed_px);
+        horizontal_movement.direction_facing = 'left'; //Mocking - from EntityPhysicalBeing()
+        horizontal_movement.x_pos = 100; //Mocking - from EntityPhysicalBeing()
+        horizontal_movement.px_moved = 0;
+        horizontal_movement.px_x_move_remaining = px_per_move_x;
+        horizontal_movement.block_underneath = true;
+        horizontal_movement.update_sprite = function(ignore, ignore){}; //Stub.
+
+        horizontal_movement.move_x();
+
+        assert.ok(horizontal_movement.px_moved == 4);
+        assert.ok(horizontal_movement.px_x_move_remaining == 56);
+        assert.ok(horizontal_movement.x_pos == 96);
+
+      });
+
+      QUnit.test( "Test this object moves right - move(), not on surface", function(assert) {
+
+        var px_per_move_x = 60;
+        var x_move_speed_px = 4;
+        var horizontal_movement = new EntityHorizontalMovement(px_per_move_x, x_move_speed_px);
+        horizontal_movement.direction_facing = 'right'; //Mocking - from EntityPhysicalBeing()
+        horizontal_movement.x_pos = 100; //Mocking - from EntityPhysicalBeing()
+        horizontal_movement.px_moved = 0;
+        horizontal_movement.px_x_move_remaining = px_per_move_x;
+        horizontal_movement.block_underneath = false;
+        horizontal_movement.update_sprite = function(ignore, ignore){}; //Stub.
+
+        horizontal_movement.move_x();
+
+        assert.ok(horizontal_movement.px_moved == 0);
+        assert.ok(horizontal_movement.px_x_move_remaining == 60);
+        assert.ok(horizontal_movement.x_pos == 104);
+
+      });
+
+      QUnit.test( "Test this object placed left of block - place_side_of_block()", function(assert) {
+
+        game_settings.game_environment.objects.blocks.wide = 60
+        var px_per_move_x = null;
+        var x_move_speed_px = null;
+        var horizontal_movement = new EntityHorizontalMovement(px_per_move_x, x_move_speed_px);
+        horizontal_movement.x_pos = 64; //Mocking - from EntityPhysicalBeing()
+        //This x_pos is just inside the left limit of a block (60 < 64 < 60*1.5)
+
+        horizontal_movement.place_side_of_block();
+
+        assert.ok(horizontal_movement.x_pos == 60);
+
+      });
+
+      QUnit.test( "Test this object placed right of block - place_side_of_block()", function(assert) {
+
+        game_settings.game_environment.objects.blocks.wide = 60
+        var px_per_move_x = null;
+        var x_move_speed_px = null;
+        var horizontal_movement = new EntityHorizontalMovement(px_per_move_x, x_move_speed_px);
+        horizontal_movement.x_pos = 54; //Mocking - from EntityPhysicalBeing()
+        //This x_pos is just inside the right limit of a block (60*0.5 < 54 < 60)
+
+        horizontal_movement.place_side_of_block();
+
+        assert.ok(horizontal_movement.x_pos == 60);
+
+      });
+
+    }
+    test_entity_horizontal_movement()
+
+    function test_entity_physical_being(){
+      /* entity_attributes.js */
+
+      QUnit.test( "Test this object on top of block - check_block_underneath()", function(assert) {
+
+        game_settings.game_environment.entity.wide = 40;
+        game_settings.game_environment.entity.high = 60;
+        game_settings.game_init.positions.wide = 40;
+        game_settings.game_init.positions.high = 40;
+
+        var block = new Object();
+        block.x_pos = game_settings.game_init.positions.wide * 2;
+        block.y_pos = game_settings.game_init.positions.high * 1;
+        block.wide = 40;
+        block.high = 40;
+        
+        var blocks = [block];
+
+        var starting_x_pos = 2;
+        var starting_y_pos = 2;
+        var attack_duration = null;
+        var physical_being = new EntityPhysicalBeing(starting_x_pos, starting_y_pos, attack_duration);
+
+        physical_being.check_block_underneath(blocks);
+
+        assert.ok(physical_being.block_underneath, true);
+
+      });
+
+      QUnit.test( "Test this object fallen into block - check_block_underneath()", function(assert) {
+
+        game_settings.game_environment.entity.wide = 40;
+        game_settings.game_environment.entity.high = 60;
+        game_settings.game_init.positions.wide = 40;
+        game_settings.game_init.positions.high = 40;
+
+        var block = new Object();
+        block.x_pos = game_settings.game_init.positions.wide * 2;
+        block.y_pos = game_settings.game_init.positions.high * 1;
+        block.wide = 40;
+        block.high = 40;
+        
+        var blocks = [block];
+
+        var starting_x_pos = 2;
+        var starting_y_pos = 2;
+        var attack_duration = null;
+        var physical_being = new EntityPhysicalBeing(starting_x_pos, starting_y_pos, attack_duration);
+        physical_being.y_pos -= 5;
+
+        physical_being.check_block_underneath(blocks);
+
+        assert.ok(physical_being.block_underneath, true);
+
+      });
+
+      QUnit.test( "Test - check_block_underneath() - left corner player, right corner block", function(assert) {
+
+        game_settings.game_environment.entity.wide = 40;
+        game_settings.game_environment.entity.high = 60;
+        game_settings.game_init.positions.wide = 40;
+        game_settings.game_init.positions.high = 40;
+
+        var block = new Object();
+        block.x_pos = game_settings.game_init.positions.wide * 2;
+        block.y_pos = game_settings.game_init.positions.high * 1;
+        block.wide = 40;
+        block.high = 40;
+        
+        var blocks = [block];
+
+        var starting_x_pos = 2;
+        var starting_y_pos = 2;
+        var attack_duration = null;
+        var physical_being = new EntityPhysicalBeing(starting_x_pos, starting_y_pos, attack_duration);
+        physical_being.x_pos -= 39;
+
+        physical_being.check_block_underneath(blocks);
+
+        assert.ok(physical_being.block_underneath, true);
+
+      });
+
+      QUnit.test( "Test - check_block_underneath() - right corner player, left corner block", function(assert) {
+
+        game_settings.game_environment.entity.wide = 40;
+        game_settings.game_environment.entity.high = 60;
+        game_settings.game_init.positions.wide = 40;
+        game_settings.game_init.positions.high = 40;
+
+        var block = new Object();
+        block.x_pos = game_settings.game_init.positions.wide * 2;
+        block.y_pos = game_settings.game_init.positions.high * 1;
+        block.wide = 40;
+        block.high = 40;
+        
+        var blocks = [block];
+
+        var starting_x_pos = 2;
+        var starting_y_pos = 2;
+        var attack_duration = null;
+        var physical_being = new EntityPhysicalBeing(starting_x_pos, starting_y_pos, attack_duration);
+        physical_being.x_pos += 39;
+
+        physical_being.check_block_underneath(blocks);
+
+        assert.ok(physical_being.block_underneath, true);
+
+      });
+
+      QUnit.test( "Test - check_collision() - block on left", function(assert) {
+        //Would need to place_block_on_side() after this occurs
+
+        game_settings.game_environment.entity.wide = 40;
+        game_settings.game_environment.entity.high = 60;
+        game_settings.game_init.positions.wide = 40;
+        game_settings.game_init.positions.high = 40;
+
+        var block = new Object();
+        block.x_pos = game_settings.game_init.positions.wide * 1;
+        block.y_pos = game_settings.game_init.positions.high * 2;
+        block.wide = 40;
+        block.high = 40;
+
+        var blocks = [block];
+
+        var starting_x_pos = 2;
+        var starting_y_pos = 2;
+        var attack_duration = null;
+        var physical_being = new EntityPhysicalBeing(starting_x_pos, starting_y_pos, attack_duration);
+        physical_being.x_pos -= 1;
+        physical_being.direction_facing = 'left';
+
+        var block_on_left = physical_being.check_collision(blocks);
+
+        assert.ok(block_on_left, true);
+
+      });
+
+      QUnit.test( "Test - check_collision() - block on right", function(assert) {
+        //Would need to place_block_on_side() after this occurs
+
+        game_settings.game_environment.entity.wide = 40;
+        game_settings.game_environment.entity.high = 60;
+        game_settings.game_init.positions.wide = 40;
+        game_settings.game_init.positions.high = 40;
+
+        var block = new Object();
+        block.x_pos = game_settings.game_init.positions.wide * 2;
+        block.y_pos = game_settings.game_init.positions.high * 2;
+        block.wide = 40;
+        block.high = 40;
+
+        var blocks = [block];
+
+        var starting_x_pos = 1;
+        var starting_y_pos = 2;
+        var attack_duration = null;
+        var physical_being = new EntityPhysicalBeing(starting_x_pos, starting_y_pos, attack_duration);
+        physical_being.x_pos += 1;
+        physical_being.direction_facing = 'right';
+
+        var block_on_right = physical_being.check_collision(blocks);
+
+        assert.ok(block_on_right, true);
+
+      });
+
+    }
+    test_entity_physical_being()
+      /*
+      //Integration tests to add
+      vertical_movement.stop_falling()
+      vertical_movement.place_top_of_block()
+      */
+
+  </script>
+</body>
+</html>
