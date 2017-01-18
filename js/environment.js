@@ -1,12 +1,14 @@
+//Things in the foreground that are not player or enemy objects.
+
 var Block = function(starting_x_pos, starting_y_pos){
-  this.wide = game_settings.objects.blocks.wide;
-  this.high = game_settings.objects.blocks.high;
-  this.x_pos = starting_x_pos * game_settings.positions.wide;
-  this.y_pos = starting_y_pos * game_settings.positions.high;
+  this.wide = game_settings.game_environment.objects.blocks.wide;
+  this.high = game_settings.game_environment.objects.blocks.high;
+  this.x_pos = starting_x_pos * game_settings.game_init.positions.wide;
+  this.y_pos = starting_y_pos * game_settings.game_init.positions.high;
   this.sprite_sheet = new Image();
-  this.sprite_sheet.src = 'css/sprites/block.png';
-  this.sprite_source_height = 20;
-  this.sprite_source_width = 20;
+  this.sprite_sheet.src = 'css/sprites/environment/block.png';
+  this.sprite_source_height = game_settings.sprite.objects.blocks.source_high;
+  this.sprite_source_width = game_settings.sprite.objects.blocks.source_wide;
 }
 
 var GroundOne = function(starting_x_pos, starting_y_pos) {
