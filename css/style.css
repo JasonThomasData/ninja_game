@@ -1,3 +1,10 @@
+body {
+  background-color: #000;
+}
+
 canvas {
   background-color: #270d0d;
+  display: block;
+  margin: 0 auto;
 }
+
