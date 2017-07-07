@@ -14,7 +14,6 @@ function populate_board(objects, map_data) {
     var line_single = lines_bottom_first[i];
     var line_separated = line_single.split(' ');
     for (var j = 0; j < line_separated.length; j++) {
-      console.log(line_single[j]);
       if (line_separated[j] == 'ni') {
         var player = new Player(j,i);
         objects['player'] = player;

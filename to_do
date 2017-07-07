@@ -1,0 +1,8 @@
+1. Need to create a way for objects to detect if an enemy is within their melee strike distance
+2. Create a way to detect which direction their enemy is in.
+3. Have a policy function, which is called inside update(). If exists then give the entity some new
+orders
+4. Give each enemy a function to detract HP away from itself. Maybe put that in the PhysicalBeing()
+object
+5. Create some kind of colour filter for all the sprites to show when they've been hit.
+Alternatively, push them back a small distance on hit. Possibly both?

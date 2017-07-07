@@ -34,7 +34,7 @@ sprite_map = {
         "sy": 31
       }
     ],
-    "strike" : [
+    "meelee_attack" : [
       {
         "sx": 26,
         "sy": 31
@@ -44,7 +44,7 @@ sprite_map = {
         "sy": 31
       }
     ],
-    "die": [
+    "projectile_attack" : [
       {
         "sx": 0,
         "sy": 62
@@ -52,13 +52,23 @@ sprite_map = {
       {
         "sx": 26,
         "sy": 62
-      },
+      }
+    ],
+    "die": [
       {
         "sx": 52,
         "sy": 62
       },
       {
         "sx": 0,
+        "sy": 93
+      },
+      {
+        "sx": 26,
+        "sy": 93
+      },
+      {
+        "sx": 52,
         "sy": 93
       }
     ]
@@ -98,7 +108,7 @@ sprite_map = {
         "sy": 0
       }
     ],
-    "strike" : [
+    "meelee_attack" : [
       {
         "sx": 0,
         "sy": 31
@@ -166,7 +176,7 @@ sprite_map = {
         "sy": 0
       }
     ],
-    "strike" : [
+    "meelee_attack" : [
       {
         "sx": 26,
         "sy": 0
@@ -208,10 +218,6 @@ sprite_map = {
     ],
     "step": [
       {
-        "sx": 26,
-        "sy": 31
-      },
-      {
         "sx": 52,
         "sy": 31
       },
@@ -226,6 +232,10 @@ sprite_map = {
       {
         "sx": 52,
         "sy": 62
+      },
+      {
+        "sx": 0,
+        "sy": 93
       }
     ],
     "jump": [
@@ -236,7 +246,7 @@ sprite_map = {
     ],
     "fall": [
       {
-        "sx": 0,
+        "sx": 26,
         "sy": 0
       }
     ],
@@ -246,11 +256,7 @@ sprite_map = {
         "sy": 0
       }
     ],
-    "strike" : [
-      {
-        "sx": 26,
-        "sy": 0
-      },
+    "projectile_attack" : [
       {
         "sx": 52,
         "sy": 0
@@ -258,6 +264,58 @@ sprite_map = {
       {
         "sx": 0,
         "sy": 31
+      },
+      {
+        "sx": 26,
+        "sy": 31
+      },
+      {
+        "sx": 0,
+        "sy": 31
+      },
+      {
+        "sx": 52,
+        "sy": 0
+      }
+    ]
+  },
+  "ninja_star": {
+    "spin": [
+      {
+        "sx": 0,
+        "sy": 0
+      },
+      {
+        "sx": 4,
+        "sy": 0
+      },
+      {
+        "sx": 0,
+        "sy": 4
+      }
+    ]
+  },
+  "energy_ball": {
+    "spin": [
+      {
+        "sx": 0,
+        "sy": 0
+      },
+      {
+        "sx": 4,
+        "sy": 0
+      },
+      {
+        "sx": 8,
+        "sy": 0
+      },
+      {
+        "sx": 0,
+        "sy": 4
+      },
+      {
+        "sx": 4,
+        "sy": 4
       }
     ]
   }

@@ -5,6 +5,8 @@ body {
 canvas {
   background-color: #270d0d;
   display: block;
-  margin: 0 auto;
+  margin: auto auto;
+  width: 700px;
+  height: 450px;
 }
 
