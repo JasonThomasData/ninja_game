@@ -1,3 +1,6 @@
+Note - if you're looking at my Github profile, I'm no longer working on this. I've learned a lot
+about OOP since starting this project and it would need a large refactor and restructure.
+
 This is a fun game where a ninja has to fight zombies, skeletons and other creatures. It started
 after I decided to do some pixel art one day and I got a little obsessed.
 
@@ -11,7 +14,7 @@ Here's some gifs of enemies I've made so far.
 ![skeleton_gif](/demo/skeleton.gif)
 ![skeleton_wizard_gif](/demo/skeleton_wizard_right.gif)
 
-###Creating a map
+### Creating a map
 
 This project will read text files and create levels that way. Save a level like this:
 
@@ -24,13 +27,13 @@ This project will read text files and create levels that way. Save a level like 
 The double dots are just spaces, and you could replace those with whatever you feel like. The other
 squares are references to objects. These translate as:
 
-#####Entities
+##### Entities
 
     ni - ninja/player. There should only be one of these.
     sk - skeleton. The most basic enemy, but can also be reborn from other dead creatures.
     zo - zombie. More hurtful and more HP than the skeleton.
 
-#####Blocks/objects
+##### Blocks/objects
 
     g1 - ground, top level, grassy
     g2 - ground, second level, different texture
@@ -42,7 +45,7 @@ It would be super fun the make the boss of this game Vladimir Putin, and have th
 Trump or something. Trump could throw his wig as a returning projectile. Putin could fire bullets
 out of his nipples, perhaps, or have a jetpack in his bum, or something tough like that.
 
-###Project structure
+### Project structure
 
 The game's logic and animation loop exists in the ```js/main.js``` file. That needs to be
 modified to keep the update speed at a constant rate, so no more than x per second for any
